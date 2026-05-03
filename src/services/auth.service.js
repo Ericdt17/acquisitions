@@ -3,6 +3,7 @@ import logger from '#config/logger.js';
 import { db } from '#config/database.js';
 import { users } from '#models/user.model.js';
 import { eq } from 'drizzle-orm';
+import { ROLE_USER } from '#constants/roles.js';
 
 
 export const hashPassword = async (password) => {
@@ -33,7 +34,7 @@ export const authenticateUser = async ({ email, password }) => {
   }
 };
 
-export const createUser = async ({ name, email, password, role = 'user'}) => {
+export const createUser = async ({ name, email, password, role = ROLE_USER }) => {
   try {
     const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if(existingUser.length > 0) {

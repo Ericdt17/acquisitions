@@ -8,6 +8,13 @@
       "when": 1771444179476,
       "tag": "0000_military_young_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777834500735,
+      "tag": "0001_petite_gamora",
+      "breakpoints": true
     }
   ]
 }

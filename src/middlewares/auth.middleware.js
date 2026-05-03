@@ -1,5 +1,6 @@
 import { cookies } from '#utils/cookies.js';
 import { jwttoken } from '#utils/jwt.js';
+import { ROLE_ADMIN, ROLE_SUPER_ADMIN } from '#constants/roles.js';
 
 export const requireAuth = (req, res, next) => {
   const token = cookies.get(req, 'token');
@@ -18,7 +19,15 @@ export const requireAuth = (req, res, next) => {
 };
 
 export const requireAdmin = (req, res, next) => {
-  if (req.user?.role !== 'admin') {
+  const role = req.user?.role;
+  if (role !== ROLE_ADMIN && role !== ROLE_SUPER_ADMIN) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  next();
+};
+
+export const requireSuperAdmin = (req, res, next) => {
+  if (req.user?.role !== ROLE_SUPER_ADMIN) {
     return res.status(403).json({ error: 'Forbidden' });
   }
   next();

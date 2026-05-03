@@ -24,6 +24,33 @@ Aucune URL ni secret ne doit être codé en dur dans le code : tout passe par l�
 
 ---
 
+## Rôles et RBAC
+
+| Rôle | Signup public | Usage |
+|------|----------------|--------|
+| `user` | Oui (défaut) | Membre standard |
+| `admin` | Oui (corps de requête) | Administrateur (ex. tontine) |
+| `super_admin` | **Non** | Plateforme globale — création **hors** `POST /api/auth/signup` |
+
+Constantes : [`src/constants/roles.js`](src/constants/roles.js).
+
+**Middleware** (après `requireAuth`) :
+
+- `requireAdmin` — autorise `admin` **et** `super_admin`.
+- `requireSuperAdmin` — autorise uniquement `super_admin`.
+
+Exemple de route réservée aux super admins : `router.get('/platform/…', requireAuth, requireSuperAdmin, handler)`.
+
+### Créer un premier `super_admin`
+
+1. Créer un compte classique (signup) ou utiliser un utilisateur existant (noter son `id` ou `email`).
+2. En base : `UPDATE users SET role = 'super_admin' WHERE email = 'ton@email.com';`
+3. Se déconnecter / se reconnecter pour obtenir un JWT contenant le nouveau rôle.
+
+Pour un nouvel utilisateur **sans** passer par l’API, insérer une ligne avec mot de passe **hashé** (bcrypt) — le plus simple reste signup puis `UPDATE` du rôle.
+
+---
+
 ## Développement local avec Docker (Postgres + API)
 
 Le fichier `docker-compose.dev.yml` lance :
