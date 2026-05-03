@@ -31,7 +31,8 @@ services:
         required: false
     environment:
       NODE_ENV: development
-      PORT: ${APP_PORT:-3001}
+      # Always 3001 inside the container; host side is APP_PORT (see ports:).
+      PORT: 3001
       # Surcharge : URL vers le service Docker `postgres` (le `.example` peut cibler localhost pour npm local).
       DATABASE_URL: postgresql://${POSTGRES_USER:-acquisitions}:${POSTGRES_PASSWORD:-acquisitions_dev}@postgres:5432/${POSTGRES_DB:-acquisitions}
     volumes:

@@ -49,10 +49,7 @@ if [ "$ready" -ne 1 ]; then
   exit 1
 fi
 
-echo "Running Drizzle migrations (inside app container)..."
-"${COMPOSE[@]}" run --rm --no-deps app npm run db:migrate
-
-echo "Starting API + Postgres (hot reload on ./src)..."
+echo "Starting API + Postgres (hot reload on ./src; migrations run when the app starts)..."
 echo "  API:    http://localhost:${APP_PORT}"
 echo "  DB:     localhost:${POSTGRES_PORT} (user ${POSTGRES_USER}, DB ${POSTGRES_DB})"
 echo "  Stop:   Ctrl+C, then: docker compose -f docker-compose.dev.yml down"

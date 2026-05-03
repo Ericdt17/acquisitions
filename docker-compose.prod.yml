@@ -14,5 +14,5 @@ services:
         required: true
     environment:
       NODE_ENV: production
-      PORT: ${APP_PORT:-3001}
+      PORT: 3001
     restart: unless-stopped

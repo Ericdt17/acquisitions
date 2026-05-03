@@ -15,6 +15,7 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 -G nodejs
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev
 COPY src ./src
+COPY drizzle ./drizzle
 RUN chown -R nodejs:nodejs /app
 USER nodejs
 EXPOSE 3001

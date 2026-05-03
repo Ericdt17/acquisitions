@@ -21,6 +21,7 @@ Les routes métier sont sous **`/api/v1`** (ex. `POST /api/v1/auth/signup`, `GET
 | `PORT` | Port HTTP (défaut `3001`) |
 | `NODE_ENV` | `development` ou `production` |
 | `LOG_LEVEL` | Niveau Winston (ex. `info`) |
+| `AUTO_MIGRATE` | Optionnel : `0` ou `false` pour **ne pas** exécuter les migrations au démarrage du serveur (par défaut : migrations appliquées au boot, sauf si `NODE_ENV=test`) |
 
 Aucune URL ni secret ne doit être codé en dur dans le code : tout passe par l’environnement.
 
@@ -125,7 +126,7 @@ npm run prod:docker
 
 ### Migrations
 
-Exécute `npm run db:migrate` (ou un job CI) avec `DATABASE_URL` pointant vers la base de **production**, **avant** ou selon ta stratégie de déploiement. L’image Docker de prod n’inclut pas `drizzle-kit` (dépendance de dev).
+Au **démarrage du serveur** (`npm run dev`, `npm start`, conteneur prod), les migrations SQL sous `drizzle/` sont appliquées automatiquement via Drizzle (sauf `NODE_ENV=test` ou si `AUTO_MIGRATE=0` / `false`). Tu peux toujours lancer **`npm run db:migrate`** à la main (même effet). L’image Docker de **production** inclut le dossier `drizzle/` mais pas `drizzle-kit` ; en multi-réplicas, prévoir un job de migration unique ou désactiver le boot migrate avec `AUTO_MIGRATE=false` et migrer en CI.
 
 ---
 
