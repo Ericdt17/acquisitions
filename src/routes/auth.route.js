@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/signup', signup);
 
 
+
 router.post('/signup', (req,res) =>{
   res.send('POST /api/auth/sign-inresponse');
 });

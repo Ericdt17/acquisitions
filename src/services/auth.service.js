@@ -29,6 +29,9 @@ export const createUser = async ({ name, email, password, role = 'user'}) => {
     logger.info(`User created successfully: ${newUser.email}`);
     return newUser;
   } catch (e) {
+    if (e.message === 'User with this email already exists') {
+      throw e;
+    }
     logger.error('Error creating user', e);
     throw new Error('Failed to create user');
   }
