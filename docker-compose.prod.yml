@@ -1,0 +1,18 @@
+# Production : uniquement l’API en conteneur.
+# Postgres est externe (Contabo, RDS, autre) : définir DATABASE_URL dans `.env.production`.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "${APP_PORT:-3001}:3001"
+    env_file:
+      - path: .env.production
+        required: true
+    environment:
+      NODE_ENV: production
+      PORT: ${APP_PORT:-3001}
+    restart: unless-stopped

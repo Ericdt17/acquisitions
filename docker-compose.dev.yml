@@ -1,0 +1,45 @@
+# Développement : API + Postgres dans Docker (pas de Neon / pas de proxy tiers).
+# Le hostname Postgres sur le réseau compose est le nom du service : `postgres`.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-acquisitions}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-acquisitions_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-acquisitions}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pg_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "${APP_PORT:-3001}:3001"
+    env_file:
+      - .env.development.example
+      - path: .env.development
+        required: false
+    environment:
+      NODE_ENV: development
+      PORT: ${APP_PORT:-3001}
+      # Surcharge : URL vers le service Docker `postgres` (le `.example` peut cibler localhost pour npm local).
+      DATABASE_URL: postgresql://${POSTGRES_USER:-acquisitions}:${POSTGRES_PASSWORD:-acquisitions_dev}@postgres:5432/${POSTGRES_DB:-acquisitions}
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pg_dev_data:
