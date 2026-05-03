@@ -22,5 +22,15 @@ export const jwttoken = {
       logger.error('Failed to authenticate  token', e);
       throw new Error('Failed to authenticate token');
     }
-  }
+  },
+
+  /** Returns decoded payload or null (no logging — for auth middleware). */
+  tryVerify(token) {
+    if (!token) return null;
+    try {
+      return jwt.verify(token, JWT_SECRET);
+    } catch {
+      return null;
+    }
+  },
 };

@@ -14,6 +14,25 @@ export const hashPassword = async (password) => {
   }
 };
 
+/** Returns safe user fields or null when credentials are invalid (same outcome for unknown email vs wrong password). */
+export const authenticateUser = async ({ email, password }) => {
+  try {
+    const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    if (!user) return null;
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return null;
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+  } catch (e) {
+    logger.error('Error authenticating user', e);
+    throw new Error('Failed to authenticate');
+  }
+};
+
 export const createUser = async ({ name, email, password, role = 'user'}) => {
   try {
     const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
