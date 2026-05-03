@@ -30,7 +30,7 @@
     "dev:docker": "bash script/dev.sh",
     "setup:docker:prod": "bash script/setup-docker-prod.sh",
     "prod:docker": "bash script/prod.sh",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
+    "test": "NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "keywords": [],
   "author": "",

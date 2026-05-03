@@ -139,6 +139,14 @@ Le code lit toujours `process.env.DATABASE_URL` via `src/configs/database.js` ; 
 
 ---
 
+## Tests
+
+- `npm test` — Jest (ESM + `supertest`). `jest.setup.mjs` charge `.env` pour `DATABASE_URL`.
+- [`src/app.integration.test.js`](src/app.integration.test.js) — santé + 404 (sans DB requise pour la logique HTTP).
+- [`src/users.integration.test.js`](src/users.integration.test.js) — CRUD `/api/users` avec une vraie base : **ignoré** (`describe.skip`) si `DATABASE_URL` est absent. Après les suites, `jest.teardown.mjs` ferme le pool Postgres pour que Jest quitte proprement.
+
+---
+
 ## Fichiers utiles
 
 | Fichier | Rôle |

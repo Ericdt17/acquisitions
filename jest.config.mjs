@@ -62,8 +62,7 @@ const config = {
   // A path to a module which exports an async function that is triggered once before all test suites
   // globalSetup: undefined,
 
-  // A path to a module which exports an async function that is triggered once after all test suites
-  // globalTeardown: undefined,
+  globalTeardown: '<rootDir>/jest.teardown.mjs',
 
   // A set of global variables that need to be available in all test environments
   // globals: {},
@@ -134,8 +133,8 @@ const config = {
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
 
-  // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  // Load .env before tests (e.g. DATABASE_URL for integration tests)
+  setupFiles: ['<rootDir>/jest.setup.mjs'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],

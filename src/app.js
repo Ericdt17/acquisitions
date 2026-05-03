@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from '#routes/auth.route.js';
+import userRoutes from '#routes/user.route.js';
 
 
 const app = express();
@@ -14,7 +15,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(morgan('combined', { write: (message) => logger.info(message.trim()) }));
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('combined', { write: (message) => logger.info(message.trim()) }));
+}
 
 
 app.get('/', (req, res) => {
@@ -33,7 +36,16 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
-app.use(())
- 
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+app.use((err, req, res, _next) => {
+  logger.error(err);
+  const status = err.statusCode || err.status || 500;
+  res.status(status).json({ error: status === 500 ? 'Internal Server Error' : err.message });
+});
+
 export default app;
