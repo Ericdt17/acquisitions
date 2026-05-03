@@ -4,3 +4,5 @@ logs/
 .env*
 !.env.development.example
 !.env.production.example
+
+tontine.md
