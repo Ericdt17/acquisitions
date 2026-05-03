@@ -2,6 +2,8 @@
 
 API Node.js (Express), PostgreSQL, Drizzle, auth JWT (cookie HTTP-only).
 
+Les routes métier sont sous **`/api/v1`** (ex. `POST /api/v1/auth/signup`, `GET /api/v1/users`). `GET /api` renvoie `version` et `basePath` ; `GET /api/health` reste disponible sans version pour les sondes.
+
 ## Prérequis
 
 - Node.js 20+
@@ -30,7 +32,7 @@ Aucune URL ni secret ne doit être codé en dur dans le code : tout passe par l�
 |------|----------------|--------|
 | `user` | Oui (défaut) | Membre standard |
 | `admin` | Oui (corps de requête) | Administrateur (ex. tontine) |
-| `super_admin` | **Non** | Plateforme globale — création **hors** `POST /api/auth/signup` |
+| `super_admin` | **Non** | Plateforme globale — création **hors** `POST /api/v1/auth/signup` |
 
 Constantes : [`src/constants/roles.js`](src/constants/roles.js).
 
@@ -142,8 +144,8 @@ Le code lit toujours `process.env.DATABASE_URL` via `src/configs/database.js` ; 
 ## Tests
 
 - `npm test` — Jest (ESM + `supertest`). `jest.setup.mjs` charge `.env` pour `DATABASE_URL`.
-- [`src/app.integration.test.js`](src/app.integration.test.js) — santé + 404 (sans DB requise pour la logique HTTP).
-- [`src/users.integration.test.js`](src/users.integration.test.js) — CRUD `/api/users` avec une vraie base : **ignoré** (`describe.skip`) si `DATABASE_URL` est absent. Après les suites, `jest.teardown.mjs` ferme le pool Postgres pour que Jest quitte proprement.
+- [`tests/integration/app.integration.test.js`](tests/integration/app.integration.test.js) — santé + 404 (sans DB requise pour la logique HTTP).
+- [`tests/integration/users.integration.test.js`](tests/integration/users.integration.test.js) — CRUD `/api/v1/users` avec une vraie base : **ignoré** (`describe.skip`) si `DATABASE_URL` est absent. Après les suites, `jest.teardown.mjs` ferme le pool Postgres pour que Jest quitte proprement.
 
 ---
 

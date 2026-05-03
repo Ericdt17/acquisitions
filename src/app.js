@@ -6,6 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from '#routes/auth.route.js';
 import userRoutes from '#routes/user.route.js';
+import { API_BASE_PATH, API_VERSION } from '#constants/api.js';
 
 
 const app = express();
@@ -32,11 +33,25 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api', (req, res) => {
-  res.status(200).json({ message: 'Acquisitions API is running' });
+  res.status(200).json({
+    message: 'Acquisitions API is running',
+    version: API_VERSION,
+    basePath: API_BASE_PATH,
+  });
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.get(`${API_BASE_PATH}/health`, (req, res) => {
+  res.status(200).send({
+    status: 'OK',
+    message: 'AcquisitionsAPI is running',
+    version: API_VERSION,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
+app.use(`${API_BASE_PATH}/auth`, authRoutes);
+app.use(`${API_BASE_PATH}/users`, userRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
